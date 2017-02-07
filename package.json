@@ -22,9 +22,9 @@
   "author": "Noah-Jerome Lotzer <n.lotzer@neusta.de>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/noahlotzer/react-simple-boilerplate/issues"
+    "url": "https://github.com/Camophile/chatty-app"
   },
-  "homepage": "https://github.com/noahlotzer/react-simple-boilerplate",
+  "homepage": "https://github.com/Camophile/chatty-app",
   "engines": {
     "node": ">=6.0.0"
   },
