@@ -3,12 +3,13 @@ import Message from './Message.jsx';
 
 class MessageList extends React.Component {
   render(){
-    return(
-
-        <main className="messages">
-          <Message messages={this.props.messages} />
-        </main>
-    );
+    const messages = this.props.messages;
+    const messagesArray = messages.map(element => (
+      <main className="messages" key={element.id}>
+        <Message messages={element} />
+      </main>
+    ));
+      return <div>{messagesArray}</div>;
   }
 }
 
