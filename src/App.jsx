@@ -9,8 +9,12 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: { name: "Anonymous" }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
+      messages: [],
+      usersOnline: 0
     }
+
+    this.addUserName = this.addUserName.bind(this);
+    this.addMessage = this.addMessage.bind(this);
   }
 
   componentDidMount() {
@@ -26,20 +30,23 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
     // Add a new message to the list of messages in the data store
-      console.log("Message from server", message);
-      const newMessage = {
-        id: message.id,
-        content: message.content,
-        username: message.username,
-        type: message.type
-      };
-      console.log("newMessage", newMessage);
-      const messages = this.state.messages.concat(newMessage)
-      console.log("messages", messages);
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
+      if(message.hasOwnProperty("clients_online")){
+        this.setState({usersOnline: message.clients_online});
+      } else{
+        console.log("Message from server", message);
+        const newMessage = {
+          id: message.id,
+          content: message.content,
+          username: message.username,
+          type: message.type
+        };
 
+        const messages = this.state.messages.concat(newMessage)
+        console.log('messages', messages);
+        // Update the state of the app component.
+        // Calling setState will trigger a call to render() in App and all child components.
+        this.setState({messages: messages})
+      }
     }
   }
 
@@ -68,15 +75,18 @@ class App extends Component {
    this.socket.send(JSON.stringify(newMessage));
   }
 
+  // addUserCount(count)
+
   render() {
     return (
       <div className="container">
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <span className="user-counter">{this.state.usersOnline} user(s) online</span>
         </nav>
         <div className="content">
           <MessageList messages={this.state.messages}/>
-          <ChatBar currentUser={this.state.currentUser.name} addUsr={this.addUserName.bind(this)} addMsg={this.addMessage.bind(this)} />
+          <ChatBar currentUser={this.state.currentUser.name} addUsr={this.addUserName} addMsg={this.addMessage} />
         </div>
       </div>
     );
