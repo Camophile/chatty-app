@@ -8,7 +8,7 @@ class App extends Component {
    constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: { name: "Anonymous" }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     }
   }
@@ -24,30 +24,29 @@ class App extends Component {
     }
 
     this.socket.onmessage = (event) => {
-      console.log("event", event);
-      console.log("server said:", event.data)
       const message = JSON.parse(event.data);
-      console.log("message", message);
-      console.log("message.type", message.type)
-      console.log("this.state.data.messages", event.data.message);
-
-
     // Add a new message to the list of messages in the data store
-    const newMessage = {
-      id: message.id,
-      content: message.content,
-      username: message.username
-    };
-    const messages = this.state.messages.concat(newMessage)
-    // Update the state of the app component.
-    // Calling setState will trigger a call to render() in App and all child components.
-    this.setState({messages: messages})
+      console.log("Message from server", message);
+      const newMessage = {
+        id: message.id,
+        content: message.content,
+        username: message.username,
+        type: message.type
+      };
+      console.log("newMessage", newMessage);
+      const messages = this.state.messages.concat(newMessage)
+      console.log("messages", messages);
+      // Update the state of the app component.
+      // Calling setState will trigger a call to render() in App and all child components.
+      this.setState({messages: messages})
 
+    }
   }
-}
 
   addMessage(content) {
+    // this.state.currentUser.messages = content;
     const newMessage = {
+                        type: "postMessage",
                         username: this.state.currentUser.name,
                         content: content
                        }
@@ -55,12 +54,18 @@ class App extends Component {
     // console.log(event.target.value);
     // Update the state of the app component.
     // Calling setState will trigger a call to render() in App and all child components.
-    console.log("newMessage:", newMessage);
     this.socket.send(JSON.stringify(newMessage));
   }
 
   addUserName(name) {
+    //this.state.currentUser.name = name;
+    const newMessage = {
+                        type: "postNotification",
+                        content: `${this.state.currentUser.name} has changed their name to ${name}`
+                       }
+
    this.setState({currentUser: { name: name }});
+   this.socket.send(JSON.stringify(newMessage));
   }
 
   render() {
@@ -71,7 +76,7 @@ class App extends Component {
         </nav>
         <div className="content">
           <MessageList messages={this.state.messages}/>
-          <ChatBar addUsr={this.addUserName.bind(this)} addMsg={this.addMessage.bind(this)} />
+          <ChatBar currentUser={this.state.currentUser.name} addUsr={this.addUserName.bind(this)} addMsg={this.addMessage.bind(this)} />
         </div>
       </div>
     );
