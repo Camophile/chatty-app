@@ -59,6 +59,10 @@ class App extends Component {
     this.socket.send(JSON.stringify(newMessage));
   }
 
+  addUserName(name) {
+   this.setState({currentUser: { name: name }});
+  }
+
   render() {
     return (
       <div className="container">
@@ -67,7 +71,7 @@ class App extends Component {
         </nav>
         <div className="content">
           <MessageList messages={this.state.messages}/>
-          <ChatBar username={this.state.currentUser.name} addMsg={this.addMessage.bind(this)} />
+          <ChatBar addUsr={this.addUserName.bind(this)} addMsg={this.addMessage.bind(this)} />
         </div>
       </div>
     );

@@ -4,7 +4,7 @@ class ChatBar extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      username: this.props.currentUser,
+      username: "",
       message: ""
     }
   }
@@ -15,15 +15,26 @@ class ChatBar extends React.Component {
     };
   }
 
-  updateContent(event){
-    this.setState({message: event.target.value})
+  newUser(event) {
+    // if(event.key === 'Enter'){
+      this.props.addUsr(this.state.username);
+    // };
+  }
+
+  updateMessage(event){
+    this.setState({message: event.target.value});
+  }
+
+  updateUsername(event){
+    this.setState({username: event.target.value});
   }
 
   render(){
     return(
       <footer className="chatbar">
-        <input className="chatbar-username" value={this.props.username} placeholder="Your Name (Optional)" />
-        <input className="chatbar-message" onChange={this.updateContent.bind(this)}
+        <input className="chatbar-username" onChange={this.updateUsername.bind(this)}
+        value={this.props.username} onKeyPress={this.newUser.bind(this)} placeholder="Your Name (Optional)" />
+        <input className="chatbar-message" onChange={this.updateMessage.bind(this)}
           value={this.props.messages} onKeyPress={this.newMessage.bind(this)} placeholder="Type a message and hit ENTER" />
       </footer>
     )
