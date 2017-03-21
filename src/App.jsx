@@ -18,7 +18,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
     this.socket = new WebSocket('ws://localhost:4000'); //connect to websocket server
     this.socket.onerror = function(event) {
       console.log("ws error:", event);
