@@ -58,7 +58,7 @@ socket_server.on('connection', (socket) => {
     }
 
     if(message.type === "postNotification"){
-      message.id = uuid.v4();
+       message.id = uuid.v4();
        message.type = "incomingNotification";
        socket_server.broadcast(message);
     }
