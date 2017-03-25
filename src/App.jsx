@@ -65,7 +65,6 @@ class App extends Component {
   }
 
   addUserName(name) {
-    console.log("this.state.currentUser.name:", this.state.currentUser.name);
     if(this.state.currentUser.name){
       if(this.state.currentUser.name !== name) {
         const newMessage = {
@@ -74,9 +73,17 @@ class App extends Component {
                             content: `${this.state.currentUser.name} has changed their name to ${name}`
                            }
         this.setState({currentUser: { name: name }});
-        console.log("newMessage", newMessage);
+
         this.socket.send(JSON.stringify(newMessage));
       }
+    }
+    else if(name === ""){
+      const newMessage = {
+                          type: "postNotification",
+                          username: this.state.currentUser.name,
+                         }
+      this.setState({currentUser: { name: name }});
+      this.socket.send(JSON.stringify(newMessage));
     }
     else {
       const newMessage = {
@@ -84,19 +91,8 @@ class App extends Component {
                           content: `New user ${name}`
                          }
       this.setState({currentUser: { name: name }});
-      console.log("newMessage", newMessage);
       this.socket.send(JSON.stringify(newMessage));
     }
-    // else{
-    //   console.log("App.jsx 'else'")
-    //   const newMessage = {
-    //                       type: "postNotification",
-    //                       username: undefined,
-    //                       content: `${this.state.currentUser.name} has changed their name to ${name}`
-    //                      }
-    // }
-
-
   }
 
   render() {
