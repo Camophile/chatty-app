@@ -17,10 +17,7 @@ class ChatBar extends React.Component {
 
   newUser(event) {
     if(event.key === 'Enter'){
-      // if(event.target.value){
-        console.log("ChatBar.jsx: event.target", event.target);
-        this.props.addUsr(this.state.username);
-      // };
+      this.props.addUsr(this.state.username);
     };
   }
 
