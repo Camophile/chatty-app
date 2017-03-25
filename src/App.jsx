@@ -8,7 +8,7 @@ class App extends Component {
    constructor(props) {
     super(props);
     this.state = {
-      currentUser: { name: "Anonymous", colour: "" }, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: { name: "", colour: "" },
       messages: [],
       usersOnline: 0
     }
@@ -29,7 +29,6 @@ class App extends Component {
     this.socket.onmessage = (event) => {
 
       const message = JSON.parse(event.data);
-
       if (message.type === "change_color") {
           let newState = this.state;
           newState.currentUser.colour = message.colour;
@@ -45,11 +44,7 @@ class App extends Component {
       if(message.hasOwnProperty("clients_online")){
         this.setState({usersOnline: message.clients_online});
       }
-      if(message.username !== this.state.currentUser) {
-
-      }
        else{
-        console.log("Message from server", message);
         const newMessage = {
           id: message.id,
           content: message.content,
@@ -70,13 +65,34 @@ class App extends Component {
   }
 
   addUserName(name) {
-    const newMessage = {
-                        type: "postNotification",
-                        content: `${this.state.currentUser.name} has changed their name to ${name}`
-                       }
+    if(this.state.currentUser.name){
+      if(this.state.currentUser.name !== name) {
+        const newMessage = {
+                            type: "postNotification",
+                            username: this.state.currentUser.name,
+                            content: `${this.state.currentUser.name} has changed their name to ${name}`
+                           }
+        this.setState({currentUser: { name: name }});
 
-   this.setState({currentUser: { name: name }});
-   this.socket.send(JSON.stringify(newMessage));
+        this.socket.send(JSON.stringify(newMessage));
+      }
+    }
+    else if(name === ""){
+      const newMessage = {
+                          type: "postNotification",
+                          username: this.state.currentUser.name,
+                         }
+      this.setState({currentUser: { name: name }});
+      this.socket.send(JSON.stringify(newMessage));
+    }
+    else {
+      const newMessage = {
+                          type: "postNotification",
+                          content: `New user ${name}`
+                         }
+      this.setState({currentUser: { name: name }});
+      this.socket.send(JSON.stringify(newMessage));
+    }
   }
 
   render() {
@@ -87,8 +103,8 @@ class App extends Component {
           <span className="user-counter">{this.state.usersOnline} user(s) online</span>
         </nav>
         <div className="content">
-          <MessageList currentUser= { this.state.currentUser } messages={this.state.messages}/>
-          <ChatBar currentUser={this.state.currentUser.name} addUsr={this.addUserName} addMsg={this.addMessage} />
+          <MessageList currentUser= { this.state.currentUser } messages={this.state.messages} />
+          <ChatBar currentUser={ this.state.currentUser.name } addUsr={this.addUserName} addMsg={this.addMessage} />
         </div>
       </div>
     );

@@ -27,16 +27,16 @@ class ChatBar extends React.Component {
 
   updateUsername(event){
     this.state.username = event.target.value;
-    this.setState({username: event.target.value});
+    this.setState({ username: event.target.value });
   }
 
   render(){
     return(
       <footer className="chatbar">
-        <input className="chatbar-username" onChange={this.updateUsername.bind(this)}
+        <input className="chatbar-username" onChange={ this.updateUsername.bind(this) }
         value={this.state.username} onKeyPress={this.newUser.bind(this)} placeholder="Your Name (Optional)" />
-        <input className="chatbar-message" onChange={this.updateMessage.bind(this)}
-          value={this.state.messages} onKeyPress={this.newMessage.bind(this)} placeholder="Type a message and hit ENTER" />
+        <input className="chatbar-message" onChange={ this.updateMessage.bind(this) }
+          value={this.state.messages} onKeyPress={ this.newMessage.bind(this) } placeholder="Type a message and hit ENTER" />
       </footer>
     )
   }

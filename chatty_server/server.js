@@ -21,7 +21,6 @@ socket_server.broadcast = function(data) {
   socket_server.clients.forEach((socket) =>{
     if(socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(data));
-      console.log("broadcasted:", data, "\n");
     }
   });
 }
@@ -43,7 +42,6 @@ function getRandomColour() {
 // when message received from client
 socket_server.on('connection', (socket) => {
  //socket connect to the client
-  console.log('Server message: Client Connected\n');
   updateClientCount();
 
   socket.on('message', (data) => {
@@ -67,13 +65,11 @@ socket_server.on('connection', (socket) => {
   const newColour = getRandomColour();
 
   socket.send(JSON.stringify({type: "change_color", colour: newColour}));
-  console.log('connection');
 
   socket.colour = newColour;
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   socket.on('close', () => {
-    console.log('Client disconnected')
     updateClientCount();
   });
 });
